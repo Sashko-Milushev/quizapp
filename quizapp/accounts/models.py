@@ -4,7 +4,7 @@ from django.contrib.auth import models as auth_models
 from quizapp.accounts.managers import QuizUserManager
 
 
-class QuizUser(auth_models.AbstractBaseUser):
+class QuizUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     email = models.EmailField(
         unique=True,
         blank=False,
@@ -19,8 +19,17 @@ class QuizUser(auth_models.AbstractBaseUser):
 
     )
 
+    is_staff = models.BooleanField(
+        default=False,
+        blank=False,
+        null=False,
+    )
+
     objects = QuizUserManager()
 
     USERNAME_FIELD = 'email'
 
     REQUIRED_FIELDS = ['username']
+
+    def __str__(self):
+        return self.username
