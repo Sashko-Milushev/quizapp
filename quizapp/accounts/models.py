@@ -33,3 +33,11 @@ class QuizUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+
+class RevokedToken(models.Model):
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['token']
