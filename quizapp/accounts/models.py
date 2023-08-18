@@ -25,6 +25,11 @@ class QuizUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         null=False,
     )
 
+    is_deleted = models.BooleanField(
+        default=False,
+        blank=False,
+        null=False
+    )
     objects = QuizUserManager()
 
     USERNAME_FIELD = 'email'

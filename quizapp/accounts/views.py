@@ -1,7 +1,8 @@
 from rest_framework import generics
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import RevokedToken
@@ -23,6 +24,18 @@ class RegisterApiView(generics.CreateAPIView):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except AuthenticationFailed as e:
+            if UserModel.objects.filter(email=request.data.get("email"), is_deleted=True).exists():
+                raise AuthenticationFailed("Your account has been deleted.")
+            raise e
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class LogoutApiView(APIView):
@@ -46,3 +59,23 @@ class LogoutApiView(APIView):
         except Exception as e:
             print(e)
             return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteUserApiView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        user.is_deleted = True
+        user.save()
+
+        return Response({
+            "detail": "User account has been marked as deleted."
+        }, status=status.HTTP_204_NO_CONTENT)
+
+
+class UserListView(generics.ListAPIView):
+    serializer_class = UserRegistrationSerializer
+
+    def get_queryset(self):
+        return UserModel.objects.filter(is_deleted=False)

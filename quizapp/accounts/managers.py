@@ -17,3 +17,6 @@ class QuizUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
 
         return self.create_user(email, username, password, **extra_fields)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_deleted=False)
