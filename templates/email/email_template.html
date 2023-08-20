@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Inline CSS styles for your email */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Website!</h1>
+        <p>Dear {{ user.username }},</p>
+        <p>Thank you for joining our community. We're excited to have you on board.</p>
+        <p>If you have any questions or need assistance, feel free to contact us.</p>
+        <p>Best regards,<br>Your Team</p>
+    </div>
+</body>
+</html>

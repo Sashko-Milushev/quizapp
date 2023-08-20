@@ -25,7 +25,7 @@ class RegisterApiView(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
 
-        send_registration_email(user_email=user.email)
+        send_registration_email(user_email=user.email, user=user)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
