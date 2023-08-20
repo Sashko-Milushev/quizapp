@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .serializers import UserRegistrationSerializer
+from .utils import send_registration_email
 
 UserModel = get_user_model()
 
@@ -20,6 +21,11 @@ class RegisterApiView(generics.CreateAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+
+        send_registration_email(user_email=user.email)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
