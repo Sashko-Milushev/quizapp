@@ -15,7 +15,7 @@ def get_random_questions():
 
 
 def get_questions_for_category(category):
-    category_trivia_url = config(f'{category.capitalize}_TRIVIA_URL')
+    category_trivia_url = config(f'{category}_TRIVIA_URL')
     response = requests.get(category_trivia_url)
     if response.status_code == requests.codes.ok:
         quiz_questions = response.json()
