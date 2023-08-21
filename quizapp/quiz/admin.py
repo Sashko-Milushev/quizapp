@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from quizapp.quiz.models import QuizCategory
+
+
+@admin.register(QuizCategory)
+class QuizCategoryAdmin(admin.ModelAdmin):
+    pass
