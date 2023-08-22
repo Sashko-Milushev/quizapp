@@ -18,6 +18,7 @@ from .utils import send_registration_email
 UserModel = get_user_model()
 
 
+# View for user registration
 class RegisterApiView(generics.CreateAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserRegistrationSerializer
@@ -25,10 +26,11 @@ class RegisterApiView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
-
+        # Send welcome email to the user
         send_registration_email(user_email=user.email, user=user)
 
 
+# View for user login with additional checks
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -38,13 +40,15 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         try:
             serializer.is_valid(raise_exception=True)
         except AuthenticationFailed as e:
+            # Check if user has deleted account
             if UserModel.objects.filter(email=request.data.get("email"), is_deleted=True).exists():
                 raise AuthenticationFailed("Your account has been deleted.")
             raise e
-
+        # Successful login with tokens in the response
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
+# View for user loging out
 class LogoutApiView(APIView):
     def post(self, request, *args, **kwargs):
         try:
@@ -68,11 +72,13 @@ class LogoutApiView(APIView):
             return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST)
 
 
+# View for soft deleting user account
 class DeleteUserApiView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
         user = request.user
+        # Change default value to preform the soft deletion
         user.is_deleted = True
         user.save()
 
@@ -81,13 +87,16 @@ class DeleteUserApiView(generics.DestroyAPIView):
         }, status=status.HTTP_204_NO_CONTENT)
 
 
+# View for listing all active users
 class UserListView(generics.ListAPIView):
     serializer_class = UserRegistrationSerializer
 
+    # Filter only the active users
     def get_queryset(self):
         return UserModel.objects.filter(is_deleted=False)
 
 
+# View for password change
 class PasswordChangeView(APIView):
     permission_classes = [IsAuthenticated]
 

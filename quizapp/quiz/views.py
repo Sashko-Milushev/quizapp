@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from quizapp.quiz.models import QuizCategory, QuizSession
+from quizapp.quiz.models import QuizCategory, QuizSession, Rank
 from quizapp.quiz.opentdb_api_service import get_random_questions, get_questions_for_category
 
 
@@ -43,5 +43,8 @@ class StartQuizSession(APIView):
 
         # Calculate and update points for the session
         session.calculate_points()
+
+        # Update the user's rank after calculating and saving points
+        Rank.update_rank(user=user)
 
         return Response({'points': session.points}, status=status.HTTP_201_CREATED)
