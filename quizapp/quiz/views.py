@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from quizapp.quiz.models import QuizCategory, QuizSession, Rank
 from quizapp.quiz.opentdb_api_service import get_random_questions, get_questions_for_category
+from quizapp.quiz.serializers import RankSerializer
 
 
 class StartQuizSession(APIView):
@@ -48,3 +49,10 @@ class StartQuizSession(APIView):
         Rank.update_rank(user=user)
 
         return Response({'points': session.points}, status=status.HTTP_201_CREATED)
+
+
+class RankingListView(APIView):
+    def get(self, request, *args, **kwargs):
+        ranks = Rank.objects.all()
+        serializer = RankSerializer(ranks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

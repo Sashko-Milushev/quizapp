@@ -30,6 +30,7 @@ class QuizUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
         blank=False,
         null=False
     )
+
     objects = QuizUserManager()
 
     USERNAME_FIELD = 'email'

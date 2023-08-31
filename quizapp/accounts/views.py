@@ -93,7 +93,8 @@ class UserListView(generics.ListAPIView):
 
     # Filter only the active users
     def get_queryset(self):
-        return UserModel.objects.filter(is_deleted=False)
+        active_users = UserModel.objects.filter(is_deleted=False)
+        return active_users
 
 
 # View for password change
