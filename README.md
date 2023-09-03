@@ -16,7 +16,8 @@
 
 ## Introduction
 
-Welcome to QuizApp - the API for an online quiz application. The application offers a fun and engaging way for users to test
+Welcome to QuizApp - the API for an online quiz application. The application offers a fun and engaging way for users to
+test
 their knowledge through various quizzes. Whether you're looking to challenge yourself, learn new facts, or simply have a
 good time, QuizApp provides a diverse range of quizzes that cater to different interests and topics.
 
@@ -68,6 +69,8 @@ Before you begin, make sure you have the following installed on your system:
    ```
 
 Your QuizApp API should now be running locally at http://localhost:8000/.
+I recommend using a platform like Postman to interact with the API endpoints and test different functionalities.
+[Visit Postman Website](https://www.postman.com/)
 
 ## API Documentation
 
